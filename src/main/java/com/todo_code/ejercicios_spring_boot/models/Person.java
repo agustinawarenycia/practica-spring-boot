@@ -7,12 +7,12 @@ import lombok.Setter;
 
 public class Person {
     String name;
-    String last_name;
+    String lastName;
     int age;
 
-    public Person(String name, String last_name, int age) {
+    public Person(String name, String lastName, int age) {
         this.name = name;
-        this.last_name = last_name;
+        this.lastName = lastName;
         this.age = age;
     }
 
