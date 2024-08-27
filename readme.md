@@ -78,3 +78,19 @@ public String sayHello(){
 return "Primera prueba";
 }
 ```
+Para realizar un POST con un body, se debe usar @RequestBody
+```
+@PostMapping("/person")
+    public String crearPersona(@RequestBody Person p1) {
+        return "El nombre es: " + p1.getName() + "\n" +
+                "El apellido es: " + p1.getLastName() + "\n" +
+                "La age es: " + p1.getAge();
+    }
+```
+Para devolver un status code personalizado se debe usar ResponseEntity
+```
+@GetMapping("/responses")
+    ResponseEntity<String> testStatusCode() {
+        return new ResponseEntity<>("This is the response body", HttpStatus.CREATED);
+    }
+```
