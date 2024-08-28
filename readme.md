@@ -72,13 +72,16 @@ Se caracteriza por no tener estado alguno (la api necesita de datos para devolve
 ## Metodos REST en Spring boot
 
 Para configurar un metodo GET se usa @GetMapping, para POST @PostMapping, para PUT @PutMapping, para DELETE @DeleteMapping y para PATCH @PatchMapping.
+
 ```
 @GetMapping
 public String sayHello(){
 return "Primera prueba";
 }
 ```
+
 Para realizar un POST con un body, se debe usar @RequestBody
+
 ```
 @PostMapping("/person")
     public String crearPersona(@RequestBody Person p1) {
@@ -87,10 +90,54 @@ Para realizar un POST con un body, se debe usar @RequestBody
                 "La age es: " + p1.getAge();
     }
 ```
+
 Para devolver un status code personalizado se debe usar ResponseEntity
+
 ```
 @GetMapping("/responses")
     ResponseEntity<String> testStatusCode() {
         return new ResponseEntity<>("This is the response body", HttpStatus.CREATED);
     }
 ```
+
+# Patrones de Diseño
+
+## Patrón de Diseño MVC
+
+Es un patrón de diseño que permite seprara la lógica de negocio de una aplicación y la vista que se presenta al usuario, utilizando como intermediario el controlador. Se compone de tres partes:
+
+* Modelo: se encarga de la lógica de negocio y de la interacción con la base de datos.
+* Vista: se encarga de la presentación de la información al usuario.
+* Controlador: se encarga de recibir las peticiones del usuario, procesarlas y enviar la respuesta adecuada.
+
+## Patrón de Diseño DTO
+
+Una de las problemáticas más comúnes a la hora de desarrollar aplicaciones es la necesidad de interconexion e intercambio de mensajes entre capas y otras aplicaciones.
+El patrón DTO (Data Transfer Object) es un patrón de diseño que se utiliza para transferir datos entre capas de una aplicación o entre aplicaciones. Un DTO es un objeto plano (POJO) que contiene una serie de atributos que pueden ser enviados o recuperados en una misma invocación. Un DTO puede contener datos de multiples clases, fuentes o tablas de una base de datos y agruparlos en una única clase simple.
+Spring permite manejar objetos DTO dentro del controller para luego transformarlos en formato JSON y retornarlos al cliente que haya realizado la petición.
+
+# Arquitectura Multicapas
+
+Existen diferentes modelos o arquitecturas  multicapalas pero hay algunas estandarizaciones se adaptan mejor a la mayoría de proyectos.
+La aquitectura más utilizada en Spring boot es:
+
+* Controller: se encarga de recibir las peticiones del usuario, procesarlas y enviar la respuesta adecuada. Generalmente esta capa trabaja con la capa *Service*.
+* Repository o DAO (Data Access Object): se encarga de interactuar con la base de datos y realizar operaciones de lectura y escritura. Permite acceso a los datos mediante tecnologías como JBC o algún ORM (Object Relational Mapping) como por ejemplo JPA con Hibernate.
+  Cada una de las clases que se encuntran en esta capa deben estar mapeadas/etiquetadas mediante la annotation @Repository.
+* Model (o Entity): la capa "model" trabaja estrechamente en conjunto con la capa Repository. Cada una de las clases modela un objeto de la vida real y es marcado con la annotation @Entity. en caso de que se transforme en una entiddad (tabla) en la base de datos. Cada instancia del entity representa una fila en la tabla de la base de datos.
+* Service: se encarga de la lógica de negocio de la aplicación. Esta capa se encarga de procesar la información recibida por el controller y realizar las operaciones necesarias para devolver una respuesta adecuada. Cada una de las clases que se encuentran en esta capa deben estar mapeadas/etiquetadas mediante la annotation @Service.
+* DTO: se encarga de contener todas las clases DTO especificadas en el proyecto. Buscan desacoplar la forma de presentación de los datos de la forma en que se almacenan en la base de datos.
+`src/main/java/com/tu_proyecto/ `
+
+```
+src/main/java/com/tu_proyecto/
+├── controller/
+│   └── UserController.java
+├── service/
+│   └── UserService.java
+├── repository/
+│   └── UserRepository.java
+└── model/
+    └── User.java
+```
+
